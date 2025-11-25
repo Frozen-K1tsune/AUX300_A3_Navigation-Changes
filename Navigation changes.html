@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TelCo Mobile App — Compact</title>
+<style>
+  :root{
+    --blue:#0D54FF;
+    --muted:#f4f6fa;
+    --card:#fff;
+    --accent:#ff4d4d;
+    --glass: rgba(0,0,0,0.04);
+    --radius:12px;
+  }
+
+  html,body{height:100%;margin:0;background:var(--muted);font-family:Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .app{
+    max-width:420px;
+    height:100vh;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    border-left:1px solid rgba(0,0,0,0.03);
+    border-right:1px solid rgba(0,0,0,0.03);
+    background:linear-gradient(180deg,transparent,transparent);
+  }
+
+  /* Top bar */
+  .topbar{
+    height:56px;
+    background:var(--blue);
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+    box-shadow:0 1px 0 var(--glass);
+  }
+  .topbar .title{
+    font-weight:700;
+    color:white;
+    font-size:1rem;
+  }
+  .topbar .subtitle{display:none;}
+
+  .content{flex:1;overflow:auto;padding:12px;}
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:12px;
+    box-shadow:0 4px 12px rgba(16,24,40,0.04);
+    margin-bottom:12px;
+  }
+  .muted{color:#666;font-size:0.9rem}
+  h3{margin:0 0 8px 0;font-size:1rem;color:#111}
+
+  .row{display:flex;gap:8px;align-items:center}
+  .small{font-size:0.88rem}
+  .meta{color:#888;font-size:0.85rem}
+
+  button.btn{
+    background:var(--blue);color:white;border:none;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  }
+  button.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:#333}
+  .tiny{padding:6px 10px;border-radius:8px;font-size:0.9rem}
+
+  input{font-family:inherit;font-size:0.95rem}
+
+  /* Bottom nav */
+  .bottom-nav{
+    height:64px;
+    background:var(--card);
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    border-top:1px solid var(--glass);
+  }
+  .nav-btn{
+    background:none;border:none;
+    color:#444;
+    font-size:0.95rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    cursor:pointer;
+  }
+  .nav-btn.active{color:var(--blue);font-weight:700}
+
+  /* Chatbot */
+  .chat-wrapper{
+    background:var(--card);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(16,24,40,0.06);
+  }
+  .chat-header{
+    background:var(--blue);
+    color:white;padding:10px 12px;text-align:center;font-weight:700;font-size:0.95rem;
+  }
+  .chat-box{
+    padding:12px;height:220px;overflow:auto;background:linear-gradient(180deg, #fff, #fbfdff);
+  }
+  .bot-msg{background:#eef0f3;padding:8px 12px;border-radius:12px;max-width:78%;margin:8px 0;color:#222;font-size:0.92rem}
+  .user-msg{background:#d8ebff;padding:8px 12px;border-radius:12px;max-width:78%;margin:8px 0 8px auto;color:var(--blue);font-weight:600;font-size:0.92rem}
+  .chat-input-row{display:flex;gap:8px;padding:10px;border-top:1px solid rgba(0,0,0,0.03);background:var(--card)}
+  #chatInput{flex:1;padding:10px 14px;border-radius:999px;border:1px solid #e7e9ee;font-size:0.95rem}
+  .send-btn{
+    width:44px;height:44px;border-radius:50%;border:none;
+    background:var(--accent);color:white;font-size:1.05rem;cursor:pointer
+  }
+
+  /* FAQ */
+  .faq-item{border-bottom:1px solid #f1f3f6;padding:10px 0}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+  .faq-a{margin-top:8px;color:#444;font-size:0.92rem;display:none}
+
+  textarea{
+    width:100%;min-height:80px;border-radius:10px;border:1px solid #e7e9ee;padding:10px;font-size:0.95rem;
+    font-family:inherit;
+  }
+
+  @media(max-width:420px){.app{border:none}}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="topbar">
+    <div class="title" id="appTitle">Dashboard</div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <section class="page" id="page-dashboard">
+      <div class="card">
+        <h3>Welcome back</h3>
+        <div class="muted small">Account: Aidan Tye</div>
+        <button class="btn tiny" style="margin-top:8px; width:100%" onclick="goTo('account')">Manage Account</button>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div style="flex:1">
+            <div class="muted small">Next Bill</div>
+            <div style="font-weight:800;font-size:1.05rem">
+              $89.40 <span class="meta">— Due Mar 14</span>
+            </div>
+          </div>
+          <button class="btn tiny" onclick="goTo('billing')">View</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Quick actions</h3>
+        <div class="row" style="margin-top:8px">
+          <button class="btn tiny" onclick="goTo('payments')">Pay</button>
+          <button class="btn tiny" onclick="downloadInvoice()">Invoice</button>
+          <button class="btn tiny ghost" onclick="goTo('support')">Support</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BILLING -->
+    <section class="page" id="page-billing" style="display:none">
+      <div class="card">
+        <h3>Billing</h3>
+        <div class="muted small">Last payment: $75.30 (Feb 02)</div>
+      </div>
+      <div class="card">
+        <h3>Recent Invoice</h3>
+        <div class="muted small">Invoice #: INV-20250314</div>
+        <div class="row" style="margin-top:8px">
+          <button class="btn tiny" onclick="downloadInvoice()">Download</button>
+          <button class="btn tiny ghost">Preview</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAYMENTS -->
+    <section class="page" id="page-payments" style="display:none">
+      <div class="card">
+        <h3>Make a Payment</h3>
+        <div class="muted small">Amount Due</div>
+        <div style="font-weight:800;font-size:1.1rem;margin:6px 0">$89.40</div>
+        <div class="row" style="margin-top:6px">
+          <input id="payAmount" type="number" value="89.40"
+            style="padding:8px;border-radius:8px;border:1px solid #e7e9ee;flex:1" />
+          <button class="btn tiny" onclick="makePayment()">Pay</button>
+        </div>
+        <p id="paymentStatus" class="meta" style="margin-top:8px"></p>
+      </div>
+    </section>
+    <!-- SUPPORT -->
+    <section class="page" id="page-support" style="display:none">
+      <div class="card">
+        <h3>Support</h3>
+        <div class="muted small">Quick help and FAQs</div>
+      </div>
+
+      <div class="card">
+        <h3>Start a Dispute</h3>
+        <button class="btn tiny" onclick="openDispute()">Start</button>
+      </div>
+
+      <div class="card" id="disputeFormWrap" style="display:none">
+        <h3>Dispute Form</h3>
+        <textarea id="disputeText" placeholder="Describe the issue..."></textarea>
+        <div class="row" style="margin-top:8px">
+          <button class="btn tiny" onclick="submitDispute()">Submit</button>
+          <button class="btn tiny ghost" onclick="closeDispute()">Cancel</button>
+        </div>
+        <p id="disputeStatus" class="meta"></p>
+      </div>
+
+      <div class="card">
+        <h3>FAQ</h3>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <div>How do I download my invoice?</div><div>▼</div>
+          </div>
+          <div class="faq-a">Go to Billing → Download Invoice.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <div>My bill is higher. Why?</div><div>▼</div>
+          </div>
+          <div class="faq-a">Check your usage in the Billing tab or submit a dispute.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <div>Can I change my payment method?</div><div>▼</div>
+          </div>
+          <div class="faq-a">Yes, go to Account → Payment Method to update your card info.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <div>How do I contact support?</div><div>▼</div>
+          </div>
+          <div class="faq-a">Use the Support tab to submit a dispute or message us in Chat.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section class="page" id="page-account" style="display:none">
+      <div class="card">
+        <h3>Account Details</h3>
+        <div class="muted small">Manage your personal info</div>
+      </div>
+
+      <div class="card">
+        <h3>Contact Information</h3>
+        <div class="muted small">Email</div>
+        <input id="accEmail" type="email" placeholder="example@email.com" style="margin-top:6px;padding:8px;border-radius:8px;border:1px solid #e7e9ee;width:100%" />
+        <div class="muted small" style="margin-top:10px">Phone Number</div>
+        <input id="accPhone" type="tel" placeholder="0400 000 000" style="margin-top:6px;padding:8px;border-radius:8px;border:1px solid #e7e9ee;width:100%" />
+      </div>
+
+      <div class="card">
+        <h3>Payment Method</h3>
+        <div class="muted small">Visa Number</div>
+        <input id="accVisa" type="text" placeholder="•••• •••• •••• 4242" style="margin-top:6px;padding:8px;border-radius:8px;border:1px solid #e7e9ee;width:100%" />
+        <button class="btn tiny" style="margin-top:12px" onclick="saveAccount()">Save</button>
+        <p id="accSaveStatus" class="meta" style="margin-top:8px"></p>
+      </div>
+    </section>
+
+    <!-- CHAT -->
+    <section class="page" id="page-chat" style="display:none">
+      <div class="chat-wrapper card" style="padding:0">
+        <div class="chat-header">TelCo Billing Assistant</div>
+        <div class="chat-box" id="chatWindow">
+          <div class="bot-msg">Hi! How can I help today?</div>
+        </div>
+        <div class="chat-input-row">
+          <input id="chatInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter'){sendChat();}">
+          <button class="send-btn" onclick="sendChat()">➜</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" data-page="dashboard" onclick="navClick(this)">🏠<span style="font-size:0.75rem">Home</span></button>
+    <button class="nav-btn" data-page="billing" onclick="navClick(this)">💳<span style="font-size:0.75rem">Billing</span></button>
+    <button class="nav-btn" data-page="payments" onclick="navClick(this)">💰<span style="font-size:0.75rem">Pay</span></button>
+    <button class="nav-btn" data-page="support" onclick="navClick(this)">🛠<span style="font-size:0.75rem">Support</span></button>
+    <button class="nav-btn" data-page="account" onclick="navClick(this)">👤<span style="font-size:0.75rem">Account</span></button>
+    <button class="nav-btn" data-page="chat" onclick="navClick(this)">💬<span style="font-size:0.75rem">Chat</span></button>
+  </div>
+
+</div>
+
+<script>
+const pages = {
+  dashboard: document.getElementById('page-dashboard'),
+  billing: document.getElementById('page-billing'),
+  payments: document.getElementById('page-payments'),
+  support: document.getElementById('page-support'),
+  account: document.getElementById('page-account'),
+  chat: document.getElementById('page-chat')
+};
+
+function showPage(key){
+  Object.values(pages).forEach(p => p.style.display="none");
+  pages[key].style.display="block";
+  document.getElementById("appTitle").innerText = key.charAt(0).toUpperCase() + key.slice(1);
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.page===key));
+}
+function navClick(btn){ showPage(btn.dataset.page); }
+function goTo(k){ showPage(k); }
+
+function downloadInvoice(){
+  const blob = new Blob(["Invoice INV-20250314\nAmount: $89.40\nDue: Mar 14"], {type:"text/plain"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download="INV-20250314.txt";
+  a.click();
+}
+
+function makePayment(){
+  const amt = document.getElementById("payAmount").value;
+  const status=document.getElementById("paymentStatus");
+  status.innerText="Processing...";
+  setTimeout(()=>{status.innerText="Payment successful ✔";},1000);
+}
+
+function openDispute(){ document.getElementById("disputeFormWrap").style.display="block"; }
+function closeDispute(){ document.getElementById("disputeFormWrap").style.display="none"; document.getElementById("disputeStatus").innerText=""; }
+function submitDispute(){
+  let t=document.getElementById("disputeText").value.trim();
+  if(t.length<10){document.getElementById("disputeStatus").innerText="More detail required"; return;}
+  document.getElementById("disputeStatus").innerText="Submitted ✔";
+}
+
+function toggleFaq(el){
+  const a = el.nextElementSibling;
+  a.style.display = a.style.display==="block" ? "none" : "block";
+}
+
+function loadAccount(){
+  document.getElementById("accEmail").value = localStorage.getItem("accEmail") || "";
+  document.getElementById("accPhone").value = localStorage.getItem("accPhone") || "";
+  document.getElementById("accVisa").value = localStorage.getItem("accVisa") || "";
+}
+
+function saveAccount(){
+  localStorage.setItem("accEmail", document.getElementById("accEmail").value);
+  localStorage.setItem("accPhone", document.getElementById("accPhone").value);
+  localStorage.setItem("accVisa", document.getElementById("accVisa").value);
+  document.getElementById("accSaveStatus").innerText="Saved ✔";
+}
+
+document.querySelector("[data-page='account']").addEventListener("click", loadAccount);
+
+function sendChat(){
+  const input=document.getElementById("chatInput");
+  const msg=input.value.trim();
+  if(!msg)return;
+  const win=document.getElementById("chatWindow");
+  win.innerHTML+=`<div class="user-msg">${msg}</div>`;
+  win.scrollTop=win.scrollHeight;
+
+  setTimeout(()=>{
+    let r="I didn’t understand. Try 'bill', 'pay', 'invoice', 'dispute'.";
+    const m=msg.toLowerCase();
+    if(m.includes("bill")) r="Your latest bill is $89.40.";
+    if(m.includes("pay")) r="You can pay in the Payments tab.";
+    if(m.includes("invoice")) r="Go to Billing → Download Invoice.";
+    if(m.includes("dispute")) r="Start a dispute in the Support tab.";
+    win.innerHTML+=`<div class="bot-msg">${r}</div>`;
+    win.scrollTop=win.scrollHeight;
+  },500);
+  input.value="";
+}
+</script>
+</body>
+</html>
